@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  postgres-database:
+    image: postgres:15.3-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: secretuser
+      POSTGRES_PASSWORD: secretpass
+    ports:
+      - '5433:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local

@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: secretuser
+    password: secretpass
+    url: jdbc:postgresql://localhost:5433/postgres
+  jpa:
+    generateDdl: true
