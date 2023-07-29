@@ -2,13 +2,16 @@ package com.trivago.hotelmanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum ReputationBadge {
-    GREEN("green"),
-    YELLOW("yellow"),
-    RED("red");
+public enum ItemCategory {
+    HOTEL ("hotel"),
+    ALTERNATIVE("alternative"),
+    HOSTEL("hostel"),
+    LODGE("lodge"),
+    RESORT("resort"),
+    GUEST_HOUSE("guest-house");
 
     private String value;
-    ReputationBadge(String value) {
+    ItemCategory(String value) {
         this.value = value;
     }
 

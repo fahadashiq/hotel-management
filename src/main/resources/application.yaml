@@ -6,3 +6,15 @@ spring:
     url: jdbc:postgresql://localhost:5433/postgres
   jpa:
     generateDdl: true
+    hibernate:
+      ddlAuto: create
+    properties:
+      javax:
+        persistence:
+          validation:
+            mode: none
+
+
+
+hotel-management:
+  unaccepted-item-names: Free,Offer,Book,Website
