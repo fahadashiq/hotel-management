@@ -8,6 +8,8 @@ spring:
     generateDdl: true
     hibernate:
       ddlAuto: create
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       javax:
         persistence:

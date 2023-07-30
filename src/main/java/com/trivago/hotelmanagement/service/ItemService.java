@@ -1,10 +1,13 @@
 package com.trivago.hotelmanagement.service;
 
 import com.trivago.hotelmanagement.model.Item;
+import com.trivago.hotelmanagement.model.criteria.Criteria;
+import com.trivago.hotelmanagement.model.criteria.ItemSpecification;
 import com.trivago.hotelmanagement.model.enumeration.ReputationBadge;
 import com.trivago.hotelmanagement.model.mapper.ItemMapper;
 import com.trivago.hotelmanagement.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -75,5 +78,27 @@ public class ItemService {
                 item.setReputationBadge(ReputationBadge.GREEN);
             }
         }
+    }
+
+    public List<Item> findByCriteria(String name, String city, ReputationBadge reputationBadge) {
+        Specification itemSpecification = new ItemSpecification();
+        if (name != null) {
+            itemSpecification = itemSpecification.and(new ItemSpecification(new Criteria("name", "=", name)));
+        }
+        if (city != null) {
+            itemSpecification = itemSpecification.and(new ItemSpecification(new Criteria("location.city", "=", city)));
+        }
+        if (reputationBadge != null) {
+            itemSpecification = itemSpecification.and(new ItemSpecification(new Criteria("reputationBadge", "=", reputationBadge.name())));
+        }
+        return itemRepository.findAll(itemSpecification);
+    }
+
+    public List<Item> findByCriteriaList(List<Criteria> criteriaList) {
+        Specification itemSpecification = new ItemSpecification();
+        for(Criteria criteria : criteriaList) {
+            itemSpecification = itemSpecification.and(new ItemSpecification(criteria));
+        }
+        return itemRepository.findAll(itemSpecification);
     }
 }

@@ -36,6 +36,7 @@ public class Item {
     @Digits(integer = 1, fraction = 0, message = "Decimal points not allowed")
     private BigDecimal rating;
     @Schema(enumAsRef = true)
+    @Enumerated(EnumType.STRING)
     private ItemCategory category;
     @OneToOne(cascade = CascadeType.ALL)
     @Valid
@@ -49,6 +50,8 @@ public class Item {
     private BigDecimal reputation;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(enumAsRef = true)
+    @Column(name = "reputationBadge")
+    @Enumerated(EnumType.STRING)
     private ReputationBadge reputationBadge;
     private Integer price;
     private Integer availability;

@@ -11,7 +11,7 @@ paths:
       tags:
         - item-controller
       summary: Get an item by id.
-      operationId: createItem_2
+      operationId: createItem_1
       parameters:
         - name: itemId
           in: path
@@ -112,6 +112,46 @@ paths:
               schema:
                 type: string
   /item:
+    get:
+      tags:
+        - item-controller
+      summary: Get list of all available items by query params.
+      operationId: fetchItemByCriteria
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: reputationBadge
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - GREEN
+              - YELLOW
+              - RED
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "200":
+          description: Returns a list of all available items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
     post:
       tags:
         - item-controller
@@ -138,6 +178,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Item'
+  /item-criteria:
+    post:
+      tags:
+        - item-controller
+      summary: Get list of all available items by given criteria.
+      operationId: fetchItemByGivenCriteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Criteria'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "200":
+          description: Returns a list of all available items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
   /booking/{itemId}:
     post:
       tags:
@@ -170,7 +239,7 @@ paths:
       tags:
         - item-controller
       summary: Get list of all available items.
-      operationId: createItem_1
+      operationId: fetchItems
       responses:
         "400":
           description: Bad Request
@@ -256,9 +325,9 @@ components:
     ReputationBadge:
       type: string
       enum:
-        - green
-        - yellow
-        - red
+        - GREEN
+        - YELLOW
+        - RED
     Error:
       type: object
       properties:
@@ -266,3 +335,18 @@ components:
           type: string
         field:
           type: string
+    Criteria:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Name of the field. For inner fields use . like location.city
+          example: name
+        operation:
+          type: string
+          description: "4 supported operations: < > = :"
+          example: =
+        value:
+          type: object
+          description: Value we need to match against
+          example: Accommodation name

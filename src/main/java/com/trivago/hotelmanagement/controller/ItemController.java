@@ -2,6 +2,8 @@ package com.trivago.hotelmanagement.controller;
 
 import com.trivago.hotelmanagement.model.Error;
 import com.trivago.hotelmanagement.model.Item;
+import com.trivago.hotelmanagement.model.criteria.Criteria;
+import com.trivago.hotelmanagement.model.enumeration.ReputationBadge;
 import com.trivago.hotelmanagement.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,7 +45,7 @@ public class ItemController {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema( schema = @Schema (implementation = Item.class)))})
     })
     @RequestMapping(path = "/items", method = RequestMethod.GET)
-    public ResponseEntity<List<Item>> createItem() {
+    public ResponseEntity<List<Item>> fetchItems() {
         return ResponseEntity.ok().body(itemService.fetchAllItems());
     }
 
@@ -107,6 +109,27 @@ public class ItemController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error(errorMessage, null));
+    }
+
+
+    @Operation(summary = "Get list of all available items by query params.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns a list of all available items.",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema( schema = @Schema (implementation = Item.class)))})
+    })
+    @RequestMapping(path = "/item", method = RequestMethod.GET)
+    public ResponseEntity<List<Item>> fetchItemByCriteria(@RequestParam(required = false) String name, @RequestParam(required = false) String city, @RequestParam(required = false) ReputationBadge reputationBadge) {
+        return ResponseEntity.ok().body(itemService.findByCriteria(name, city, reputationBadge));
+    }
+
+    @Operation(summary = "Get list of all available items by given criteria.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns a list of all available items.",
+                    content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema( schema = @Schema (implementation = Item.class)))})
+    })
+    @RequestMapping(path = "/item-criteria", method = RequestMethod.POST)
+    public ResponseEntity<List<Item>> fetchItemByGivenCriteria(@RequestBody List<Criteria> criteriaList) {
+        return ResponseEntity.ok().body(itemService.findByCriteriaList(criteriaList));
     }
 
 }
