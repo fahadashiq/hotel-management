@@ -1,5 +1,15 @@
 version: '3.8'
 services:
+  hotel-management:
+    image: hotel-management:latest
+    restart: always
+    environment:
+      SPRING.DATASOURCE.URL: jdbc:postgresql://postgres-database:5432/postgres
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres-database
+
   postgres-database:
     image: postgres:15.3-alpine
     restart: always
