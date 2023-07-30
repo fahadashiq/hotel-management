@@ -5,11 +5,13 @@ import com.trivago.hotelmanagement.model.Error;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.List;
 public class ResponseExceptionHandler {
     private final Logger LOGGER = LoggerFactory.getLogger(ResponseExceptionHandler.class);
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handleValidationExceptions(MethodArgumentNotValidException exception) {
         LOGGER.error(exception.getMessage());
         List<Error> errors = new ArrayList<>();
@@ -29,6 +32,7 @@ public class ResponseExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) throws IOException
     {
         if (exception.getCause() instanceof InvalidFormatException) {

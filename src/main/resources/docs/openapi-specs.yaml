@@ -1,0 +1,268 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /item/{itemId}:
+    get:
+      tags:
+        - item-controller
+      summary: Get an item by id.
+      operationId: createItem_2
+      parameters:
+        - name: itemId
+          in: path
+          description: Item id for the accommodation.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "404":
+          description: Error in case item doesn't exist.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Item'
+        "200":
+          description: Returns the item found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    put:
+      tags:
+        - item-controller
+      summary: Update an existing item by id.
+      operationId: updateItem
+      parameters:
+        - name: itemId
+          in: path
+          description: Item id for the accommodation.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      responses:
+        "400":
+          description: Returns a list of validation errors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        "404":
+          description: Error in case item doesn't exist.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Item'
+        "200":
+          description: Returns the updated item.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    delete:
+      tags:
+        - item-controller
+      summary: Delete an item by id.
+      operationId: updateItem_1
+      parameters:
+        - name: itemId
+          in: path
+          description: Item id for the accommodation.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "200":
+          description: Item deleted successfully.
+          content:
+            '*/*':
+              schema:
+                type: string
+        "204":
+          description: Item doesn't exist.
+          content:
+            '*/*':
+              schema:
+                type: string
+  /item:
+    post:
+      tags:
+        - item-controller
+      summary: Create a new Item.
+      operationId: createItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      responses:
+        "400":
+          description: Returns a list of validation errors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Error'
+        "200":
+          description: Returns the newly created item.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+  /booking/{itemId}:
+    post:
+      tags:
+        - item-controller
+      summary: Book a place in requested accommodation.
+      operationId: bookAccommodation
+      parameters:
+        - name: itemId
+          in: path
+          description: Item id for the accommodation.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "400":
+          description: In case either accommodation not found or no place exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "200":
+          description: Accommodation booked successfully.
+          content:
+            '*/*':
+              schema:
+                type: string
+  /items:
+    get:
+      tags:
+        - item-controller
+      summary: Get list of all available items.
+      operationId: createItem_1
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+        "200":
+          description: Returns a list of all available items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          description: "Name of the accommodation with length of atleast 5 characters.\
+            \ Restricted words: Free,Offer,Book,Website"
+          example: Accommodation name
+        rating:
+          maximum: 5
+          minimum: 0
+          type: number
+        category:
+          $ref: '#/components/schemas/ItemCategory'
+        location:
+          $ref: '#/components/schemas/Location'
+        image:
+          type: string
+          description: A valid image url.
+          example: https://image.com/image.jpg
+        reputation:
+          maximum: 1000
+          minimum: 0
+          type: number
+        reputationBadge:
+          $ref: '#/components/schemas/ReputationBadge'
+        price:
+          type: integer
+          format: int32
+        availability:
+          type: integer
+          format: int32
+    ItemCategory:
+      type: string
+      enum:
+        - hotel
+        - alternative
+        - hostel
+        - lodge
+        - resort
+        - guest-house
+    Location:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        zipCode:
+          pattern: "^[0-9]*$"
+          type: string
+          description: A zip code with a length of 5 integers
+          example: "12345"
+        address:
+          type: string
+    ReputationBadge:
+      type: string
+      enum:
+        - green
+        - yellow
+        - red
+    Error:
+      type: object
+      properties:
+        errorMessage:
+          type: string
+        field:
+          type: string

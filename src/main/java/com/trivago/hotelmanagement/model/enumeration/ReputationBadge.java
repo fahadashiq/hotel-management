@@ -1,4 +1,4 @@
-package com.trivago.hotelmanagement.model;
+package com.trivago.hotelmanagement.model.enumeration;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
