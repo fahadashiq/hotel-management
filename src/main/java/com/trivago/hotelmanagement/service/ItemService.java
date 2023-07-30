@@ -7,6 +7,8 @@ import com.trivago.hotelmanagement.model.enumeration.ReputationBadge;
 import com.trivago.hotelmanagement.model.mapper.ItemMapper;
 import com.trivago.hotelmanagement.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +23,13 @@ public class ItemService {
     @Autowired
     private ItemMapper itemMapper;
 
+    @CacheEvict(value = "items", allEntries = true)
     public Item createItem(Item item) {
         calculateBadge(item);
         return itemRepository.save(item);
     }
 
+    @CacheEvict(value = "items", allEntries = true)
     public Item updateItem(Item item, Long id) {
         Optional<Item> itemFound = itemRepository.findById(id);
         if(itemFound.isPresent()) {
@@ -36,6 +40,7 @@ public class ItemService {
         return null;
     }
 
+    @CacheEvict(value = "items", allEntries = true)
     public boolean deleteItem(Long itemId) {
         if (itemRepository.existsById(itemId)) {
             itemRepository.deleteById(itemId);
@@ -44,7 +49,7 @@ public class ItemService {
             return false;
         }
     }
-
+    @CacheEvict(value = "items", allEntries = true)
     public String bookAccommodation(Long itemId) {
         Optional<Item> itemFound = itemRepository.findById(itemId);
         if(itemFound.isPresent()) {
@@ -59,11 +64,12 @@ public class ItemService {
         return "Accommodation not found.";
     }
 
-
+    @Cacheable("items")
     public List<Item> fetchAllItems() {
         return itemRepository.findAll();
     }
 
+    @Cacheable("items")
     public Item findItemById(Long id) {
         return itemRepository.findById(id).orElse(null);
     }
@@ -80,6 +86,7 @@ public class ItemService {
         }
     }
 
+    @Cacheable("items")
     public List<Item> findByCriteria(String name, String city, ReputationBadge reputationBadge) {
         Specification itemSpecification = new ItemSpecification();
         if (name != null) {
@@ -94,6 +101,7 @@ public class ItemService {
         return itemRepository.findAll(itemSpecification);
     }
 
+    @Cacheable("items")
     public List<Item> findByCriteriaList(List<Criteria> criteriaList) {
         Specification itemSpecification = new ItemSpecification();
         for(Criteria criteria : criteriaList) {
