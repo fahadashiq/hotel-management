@@ -7,7 +7,7 @@ RUN mvn verify clean --fail-never
 COPY ./ /temp
 
 WORKDIR /temp
-RUN mvn clean install && cp target/*.jar /hotel-management/hotelmanagement.jar
+RUN mvn clean install && cp target/*.jar /hotel-management/hotelmanagement.jar && rm -rf /temp && rm -rf ~/.m2
 WORKDIR /hotel-management
 
 EXPOSE 8080
