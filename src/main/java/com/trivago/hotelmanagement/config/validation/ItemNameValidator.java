@@ -18,8 +18,12 @@ public class ItemNameValidator implements ConstraintValidator<ItemNameConstraint
 
     @Override
     public boolean isValid(String name, ConstraintValidatorContext constraintValidatorContext) {
-        // Assuming that name is required field since it should contain more than 10 characters.
-        if (StringUtils.isEmpty(name) || name.length() < 10) {
+        // name is not required
+        if (name == null) {
+            return true;
+        }
+
+        if (name.length() < 10) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("Should not be empty and must have atleast 10 characters.").addConstraintViolation();
             return false;
