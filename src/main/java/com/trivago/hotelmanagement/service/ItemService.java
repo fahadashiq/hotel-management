@@ -1,6 +1,7 @@
 package com.trivago.hotelmanagement.service;
 
 import com.trivago.hotelmanagement.config.ResponseExceptionHandler;
+import com.trivago.hotelmanagement.config.multitenancy.TenantAwareService;
 import com.trivago.hotelmanagement.model.Item;
 import com.trivago.hotelmanagement.model.criteria.Criteria;
 import com.trivago.hotelmanagement.model.criteria.ItemSpecification;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.Optional;
  * Service class responsible to handle business logic for items.
  */
 @Service
+@TenantAwareService
 public class ItemService {
     private final Logger LOGGER = LoggerFactory.getLogger(ResponseExceptionHandler.class);
 
@@ -99,7 +102,7 @@ public class ItemService {
      * Fetch the list of all available items
      * @return list of items
      */
-    @Cacheable("items")
+    @CachePut("items")
     public List<Item> fetchAllItems() {
         return itemRepository.findAll();
     }
@@ -109,7 +112,7 @@ public class ItemService {
      * @param id ID of the item.
      * @return found item else null
      */
-    @Cacheable("items")
+    @CachePut ("items")
     public Item findItemById(Long id) {
         return itemRepository.findById(id).orElse(null);
     }
@@ -133,7 +136,7 @@ public class ItemService {
      * @param reputationBadge color of the reputation badge
      * @return list of all items that meet criteria
      */
-    @Cacheable("items")
+    @CachePut("items")
     public List<Item> findByCriteria(String name, String city, ReputationBadge reputationBadge) {
         LOGGER.info("Searching for items that meet the criteria name : {}, city: {}, reputationBadge: {}", name, city, reputationBadge);
         Specification itemSpecification = new ItemSpecification();
@@ -154,7 +157,7 @@ public class ItemService {
      * @param criteriaList list of all criteria
      * @return list of all items that meet criteria
      */
-    @Cacheable("items")
+    @CachePut ("items")
     public List<Item> findByCriteriaList(List<Criteria> criteriaList) {
         LOGGER.info("Searching for items that meet provided criteria.");
         Specification itemSpecification = new ItemSpecification();

@@ -26,3 +26,12 @@ with `docker-compose up`
 | logs                | To check logs for the running container |
 | stop                | Stop all the running containers         |
 
+
+### Authentication
+Http basic auth has been implemented to make the entities tenant aware. Two users are hardcoded for now which belongs to
+two different tenants and user from one tenant can't access items from another tenant.
+
+| Username | Password | Tenant id |
+|----------|----------|-----------|
+| user1    | pass123  | tenant1   |
+| user2    | pass123  | tenant2   |

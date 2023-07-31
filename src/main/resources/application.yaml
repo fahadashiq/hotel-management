@@ -5,12 +5,14 @@ spring:
     password: secretpass
     url: jdbc:postgresql://localhost:5433/postgres
   jpa:
+#    showSql: true
     generateDdl: true
     hibernate:
       ddlAuto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
+      hibernate.session_factory.interceptor: com.trivago.hotelmanagement.config.multitenancy.TenantInterceptor
       javax:
         persistence:
           validation:

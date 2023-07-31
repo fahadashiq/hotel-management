@@ -1,6 +1,7 @@
 package com.trivago.hotelmanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.trivago.hotelmanagement.config.multitenancy.TenantEntity;
 import com.trivago.hotelmanagement.config.validation.ItemNameConstraint;
 import com.trivago.hotelmanagement.model.enumeration.ItemCategory;
 import com.trivago.hotelmanagement.model.enumeration.ReputationBadge;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Filter;
 import org.hibernate.validator.constraints.URL;
 
 import java.math.BigDecimal;
@@ -23,7 +25,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "item")
-public class Item {
+public class Item extends TenantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
