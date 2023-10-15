@@ -22,7 +22,7 @@ with `docker-compose up`
 | Name                | Description                             |
 |---------------------|-----------------------------------------|
 | start               | Start all the containers.               |
-| start-database-only | Starts container for only database.     |
+| start-database-only | Starts container for database only.     |
 | logs                | To check logs for the running container |
 | stop                | Stop all the running containers         |
 
